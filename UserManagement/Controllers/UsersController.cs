@@ -7,10 +7,13 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using UserManagement.Dtos;
+using UserManagement.Helper;
 using UserManagement.Models;
+using static UserManagement.Dtos.UserDto;
 
 namespace UserManagement.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private UserManagementDbContext db = new UserManagementDbContext();
@@ -51,6 +54,7 @@ namespace UserManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Password = user.Password.ToMD5();
                 db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -71,7 +75,10 @@ namespace UserManagement.Controllers
             {
                 return HttpNotFound();
             }
-            return View(user);
+            EditDto editUser = new EditDto();
+            editUser.user = user;
+            editUser.roles = (Enums.Roles)editUser.user.Role;
+            return View(editUser);
         }
 
         // POST: Users/Edit/5
@@ -79,15 +86,18 @@ namespace UserManagement.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Email,Password,Name,Surname,Phone,BirthDate,Role")] User user)
+        public ActionResult Edit(EditDto editUser)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                editUser.user.Role = editUser.roles;
+                if(editUser.newPassword != null)
+                    editUser.user.Password = editUser.newPassword.ToMD5();
+                db.Entry(editUser.user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(user);
+            return View(editUser);
         }
 
         // GET: Users/Delete/5

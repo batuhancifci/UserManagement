@@ -129,10 +129,12 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Dtos\GeneralDto.cs" />
+    <Compile Include="Dtos\UserDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Enums\Roles.cs" />
+    <Compile Include="Helper\Enums.cs" />
+    <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Migrations\202205190717495_initial.cs" />
     <Compile Include="Migrations\202205190717495_initial.Designer.cs">
       <DependentUpon>202205190717495_initial.cs</DependentUpon>

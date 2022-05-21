@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using UserManagement.Helper.Enums;
+using static UserManagement.Helper.Enums;
 
 namespace UserManagement.Models
 {
@@ -25,6 +25,6 @@ namespace UserManagement.Models
         public string Phone { get; set; }
         [Required(ErrorMessage = "Birth Date Required!")]
         public DateTime BirthDate { get; set; }
-        public int Role { get; set; }
+        public Roles Role { get; set; }
     }
 }
