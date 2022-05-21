@@ -48,14 +48,18 @@ namespace UserManagement.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Email,Password,Name,Surname,Phone,BirthDate,Role")] User user)
+        public ActionResult Create(User user)
         {
             if (ModelState.IsValid)
             {
+                var existsUser = db.Users.FirstOrDefault(f => f.Email == user.Email);
+                if(existsUser != null)
+                {
+                    ViewBag.Message = "This user already exists.";
+                    return View(user);
+                }
                 user.Password = user.Password.ToMD5();
                 db.Users.Add(user);
                 db.SaveChanges();
