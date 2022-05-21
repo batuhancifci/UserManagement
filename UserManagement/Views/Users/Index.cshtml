@@ -7,7 +7,7 @@
 
 <h2>User List</h2>
 
-<p class="pull-right">
+<p class="float-right">
     @Html.ActionLink("Create New User", "Create", "Users", null, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
@@ -71,28 +71,35 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+
+            $(document).ajaxSend(function () {
+                $("#loading").show();
+            });
+
             $('.deleteUser').on('click', function () {
+
                 var id = $(this).data('key');
                 var confirmation = confirm("are you sure you want to remove the item?");
 
                 if (confirmation) {
-                    //$("#spinner-div").show(); //Load button clicked show spinner
                     $.ajax({
                         url: '/Users/Delete/' + id,
                         type: 'POST',
                         dataType: 'json',
                         success: function (data) {
                             if (data.Error == false) {
-                                alert("User is deleted");
                                 location.reload();
                             }
                             else {
                                 alert("An error was!");
                             }
+
                         }
+                    }).done(function () {
+                        $("#loading").hide();
                     });
-                    //$("#spinner-div").hide(); //Request is complete so hide spinner
                 }
+
             });
         });
 
