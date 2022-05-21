@@ -12,7 +12,6 @@ namespace UserManagement.Dtos
         public class EditDto
         {
             public User user { get; set; }
-            public Roles roles { get; set; }
             public string newPassword { get; set; }
         }
     }

@@ -42,7 +42,9 @@ namespace UserManagement.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View();
+            User user = new User();
+            user.Role = Enums.Roles.User;
+            return View(user);
         }
 
         // POST: Users/Create
@@ -63,7 +65,7 @@ namespace UserManagement.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -77,20 +79,17 @@ namespace UserManagement.Controllers
             }
             EditDto editUser = new EditDto();
             editUser.user = user;
-            editUser.roles = (Enums.Roles)editUser.user.Role;
             return View(editUser);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditDto editUser)
         {
             if (ModelState.IsValid)
             {
-                editUser.user.Role = editUser.roles;
                 if(editUser.newPassword != null)
                     editUser.user.Password = editUser.newPassword.ToMD5();
                 db.Entry(editUser.user).State = EntityState.Modified;
@@ -99,8 +98,8 @@ namespace UserManagement.Controllers
             }
             return View(editUser);
         }
-
-        // GET: Users/Delete/5
+        
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,7 +114,7 @@ namespace UserManagement.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         public JsonResult DeleteConfirmed(int id)
         {
