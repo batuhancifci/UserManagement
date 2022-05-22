@@ -52,21 +52,26 @@ namespace UserManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
         {
+            var response = new GeneralDto.Response();
             if (ModelState.IsValid)
             {
                 var existsUser = db.Users.FirstOrDefault(f => f.Email == user.Email);
-                if(existsUser != null)
+                if (existsUser != null)
                 {
-                    ViewBag.Message = "This user already exists.";
-                    return View(user);
+                    response.Message = "This user already exists.";
+                    response.Error = true;
+                    return Json(response);
                 }
                 user.Password = user.Password.ToMD5();
                 db.Users.Add(user);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                response.Error = false;
+                return Json(response);
             }
 
-            return View(user);
+            response.Message = "Fill in all fields!";
+            response.Error = true;
+            return Json(response);
         }
 
         [Authorize(Roles = "Admin")]
@@ -94,7 +99,7 @@ namespace UserManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(editUser.newPassword != null)
+                if (editUser.newPassword != null)
                     editUser.user.Password = editUser.newPassword.ToMD5();
                 db.Entry(editUser.user).State = EntityState.Modified;
                 db.SaveChanges();
@@ -102,7 +107,7 @@ namespace UserManagement.Controllers
             }
             return View(editUser);
         }
-        
+
 
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
