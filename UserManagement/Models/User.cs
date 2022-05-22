@@ -24,6 +24,8 @@ namespace UserManagement.Models
         [Required(ErrorMessage = "Phone Required!")]
         public string Phone { get; set; }
         [Required(ErrorMessage = "Birth Date Required!")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}", ApplyFormatInEditMode =true)]
         public DateTime BirthDate { get; set; }
         public Roles Role { get; set; }
     }
